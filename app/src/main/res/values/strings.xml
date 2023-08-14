@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">RecyclerViewAdvancedPractice</string>
+    <string name="tv_task_text">Подготовиться к собесу</string>
+</resources>
