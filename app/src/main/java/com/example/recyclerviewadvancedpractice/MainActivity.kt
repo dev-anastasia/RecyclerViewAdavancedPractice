@@ -13,7 +13,7 @@ import java.time.format.DateTimeFormatter
 
 var currentDate: LocalDateTime = LocalDateTime.now().minusDays(1)
 val formatter: DateTimeFormatter = DateTimeFormatter.ofPattern("d MMMM")
-val tomorrow: String = LocalDateTime.now().plusDays(1).format(formatter)
+val tomorrow: String = currentDate.plusDays(2).format(formatter)
 
 class MainActivity : AppCompatActivity() {
 
@@ -25,27 +25,10 @@ class MainActivity : AppCompatActivity() {
 
         // List init
         var list: MutableList<Any> = MutableList(0) {}
-        for (i in 0 until 5) {
-            currentDate = currentDate.plusDays(1)
-            list.add(currentDate.format(formatter))
-            for (k in 0 until 4) {
-                list.add(Task("Подготовиться к собесу"))
-            }
-        }
+        listInit(list)
+        var position = findPosition(list) // индекс новой задачи
 
-        // position init
-        var position = 0 // индекс новой задачи
-
-        fun findPosition() {
-            for (i in list.indices) {
-                if (list[i].toString() == tomorrow) {
-                    position = i
-                    break
-                }
-            }
-        }
-        findPosition()
-
+        // Adapter
         val recyclerView = findViewById<RecyclerView>(R.id.list)
         val btnAdd: FloatingActionButton = findViewById(R.id.btn_add)
 
