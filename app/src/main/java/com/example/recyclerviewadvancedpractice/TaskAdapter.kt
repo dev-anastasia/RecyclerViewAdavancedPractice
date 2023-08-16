@@ -6,11 +6,13 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 class TaskAdapter(private val list: List<Any>) : RecyclerView.Adapter<ViewHolder>() {
 
     override fun getItemViewType(position: Int): Int {
-        return if (list[position] is String)
+        return if (list[position] is LocalDateTime)
             TaskViewType.DATE.ordinal
         else TaskViewType.TASK.ordinal
     }
@@ -42,7 +44,7 @@ class TaskAdapter(private val list: List<Any>) : RecyclerView.Adapter<ViewHolder
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         when (holder) {
             is DateViewHolder -> {
-                holder.bind(list[position] as String)
+                holder.bind(list[position] as LocalDateTime)
             }
             is TaskViewHolder -> {
                 holder.bind(list[position] as Task)
@@ -58,9 +60,10 @@ enum class TaskViewType {
 
 class DateViewHolder(view: View) : ViewHolder(view) {
     private val dateTv: TextView = itemView.findViewById(R.id.tv_date)
+    private val formatter: DateTimeFormatter = DateTimeFormatter.ofPattern("d MMMM")
 
-    fun bind(date: String) {
-        dateTv.text = date
+    fun bind(date: LocalDateTime) {
+        dateTv.text = date.format(formatter)
     }
 }
 

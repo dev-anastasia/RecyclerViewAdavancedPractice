@@ -1,19 +1,16 @@
 package com.example.recyclerviewadvancedpractice
 
 import android.os.Bundle
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import java.sql.Timestamp
-import java.text.SimpleDateFormat
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
-var currentDate: LocalDateTime = LocalDateTime.now().minusDays(1)
-val formatter: DateTimeFormatter = DateTimeFormatter.ofPattern("d MMMM")
-val tomorrow: String = currentDate.plusDays(2).format(formatter)
+// Branch devOne
+
+val currentDate: LocalDateTime = LocalDateTime.now()
 
 class MainActivity : AppCompatActivity() {
 
@@ -23,10 +20,14 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        // List init
-        var list: MutableList<Any> = MutableList(0) {}
+        // List & Map init
+        val list: MutableList<Any> = MutableList(0) {}
         listInit(list)
-        var position = findPosition(list) // индекс новой задачи
+
+        val dateStateMap = DateStateMap(list)
+        dateStateMap.initDateStateMap()
+        println(dateStateMap)
+
 
         // Adapter
         val recyclerView = findViewById<RecyclerView>(R.id.list)
@@ -41,10 +42,11 @@ class MainActivity : AppCompatActivity() {
         )
 
         btnAdd.setOnClickListener {
+
+            val position = dateStateMap.findElementPosition(currentDate) // индекс новой задачи
             list.add(position, Task("Исправить код"))
             adapter.notifyItemInserted(position)
             recyclerView.smoothScrollToPosition(position)
-            position++
         }
     }
 }
