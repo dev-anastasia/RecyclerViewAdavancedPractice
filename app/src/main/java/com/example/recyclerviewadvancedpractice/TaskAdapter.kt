@@ -4,12 +4,54 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
-class TaskAdapter(private val list: List<Any>) : RecyclerView.Adapter<ViewHolder>() {
+class ItemDiffUtilCallback(private val oldList: List<Any>, private val newList: List<Any>) :
+    DiffUtil.Callback() {
+
+    override fun getOldListSize(): Int = oldList.size
+
+    override fun getNewListSize(): Int = newList.size
+    override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+
+        val oldItem = oldList[oldItemPosition]
+        val newItem = newList[newItemPosition]
+
+        return if (oldItem is Task) {
+            if (newItem is Task)    // Task & Task
+                oldItem.id == newItem.id
+            else    // Task & Date
+                false
+        } else {
+            if (newItem is LocalDateTime)   // Date & Date
+                oldItem == newItem
+            else    // Date & Task
+                false
+        }
+    }
+
+    override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+
+        val oldItem = oldList[oldItemPosition]
+        val newItem = newList[newItemPosition]
+
+        return if (oldItem is Task) {   // Task & Task
+            val newTask = newItem as Task
+            oldItem.task == newTask.task
+        } else {   // Date & Date
+            val oldDate = oldItem as LocalDateTime
+            val newDate = newItem as LocalDateTime
+            oldDate.toString() == newDate.toString()
+        }
+    }
+
+}
+
+class TaskAdapter(var list: MutableList<Any>) : RecyclerView.Adapter<ViewHolder>() {
 
     override fun getItemViewType(position: Int): Int {
         return if (list[position] is LocalDateTime)

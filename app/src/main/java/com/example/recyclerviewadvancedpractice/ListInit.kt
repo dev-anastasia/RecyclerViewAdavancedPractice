@@ -8,11 +8,7 @@ fun listInit(list: MutableList<Any>) {
     for (i in 0 until 5) {
         curr = curr.plusDays(1)
         list.add(curr)
-        for (k in 0 until 4) {
-            // list.add(Task("Написать отчет"))
-            // list.add(Task("Оставить ревью"))
-            // list.add(Task("Связаться с отделом по кадрам"))
+        for (k in 0 until 4)
             list.add(Task(UUID.randomUUID(), "Подготовиться к собесу"))
-        }
     }
 }

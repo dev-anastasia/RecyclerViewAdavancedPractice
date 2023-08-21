@@ -2,6 +2,7 @@ package com.example.recyclerviewadvancedpractice
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -21,7 +22,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         // List & Map init
-        val list: MutableList<Any> = MutableList(0) {}
+        var list: MutableList<Any> = MutableList(0) {}
         listInit(list)
 
         val dateStateMap = DateStateMap(list)
@@ -43,13 +44,20 @@ class MainActivity : AppCompatActivity() {
 
         btnAdd.setOnClickListener {
 
-            val task = Task(UUID.randomUUID(), "Почистить код")
-            val position = dateStateMap.findElementPosition(currentDate) // индекс новой задачи
+            val newList = ArrayList(list) // создаём новый список на основе старого
 
-            list.add(position, task) // добавляем в список адаптера
+            val task = Task(UUID.randomUUID(), "Почистить код")
+            newList.add(task) // добавляем в новый список новый элемент
+
+            val position = dateStateMap.findElementPosition(currentDate) // индекс новой задачи
             dateStateMap.addElement(currentDate, task) // добавляем в мапу
 
-            adapter.notifyItemInserted(position)
+            val diff = DiffUtil.calculateDiff(ItemDiffUtilCallback(list, newList)) // сравнили два списка
+            adapter.list.add(position, task) // добавили новый элемент в список адаптера
+            list = newList // обновили старый список
+
+            diff.dispatchUpdatesTo(adapter)
+
             recyclerView.smoothScrollToPosition(position)
         }
     }
