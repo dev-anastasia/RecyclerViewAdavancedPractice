@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
+import java.util.*
 
 // Branch devOne
 
@@ -43,8 +43,12 @@ class MainActivity : AppCompatActivity() {
 
         btnAdd.setOnClickListener {
 
+            val task = Task(UUID.randomUUID(), "Почистить код")
             val position = dateStateMap.findElementPosition(currentDate) // индекс новой задачи
-            list.add(position, Task("Исправить код"))
+
+            list.add(position, task) // добавляем в список адаптера
+            dateStateMap.addElement(currentDate, task) // добавляем в мапу
+
             adapter.notifyItemInserted(position)
             recyclerView.smoothScrollToPosition(position)
         }

@@ -4,7 +4,7 @@ import java.time.LocalDateTime
 
 data class DateStateMap(private val list: List<Any>) {
 
-    private var dateStateMap: MutableMap<LocalDateTime, List<Task>> = mutableMapOf()
+    private var dateStateMap: MutableMap<LocalDateTime, MutableList<Task>> = mutableMapOf()
 
     fun initDateStateMap() {
 
@@ -32,5 +32,10 @@ data class DateStateMap(private val list: List<Any>) {
             list.indexOf(element) + 1   // +1 чтобы занять место ПОСЛЕ этого индекса
         } else
             list.indexOf(date) + 1
+    }
+
+    fun addElement(date: LocalDateTime, task: Task) {
+        val tasksList = dateStateMap[date]
+        tasksList?.add(task)
     }
 }

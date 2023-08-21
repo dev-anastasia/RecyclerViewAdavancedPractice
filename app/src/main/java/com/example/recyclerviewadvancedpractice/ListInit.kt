@@ -1,6 +1,7 @@
 package com.example.recyclerviewadvancedpractice
 
 import java.time.LocalDateTime
+import java.util.*
 
 fun listInit(list: MutableList<Any>) {
     var curr: LocalDateTime = currentDate.minusDays(1)
@@ -11,7 +12,7 @@ fun listInit(list: MutableList<Any>) {
             // list.add(Task("Написать отчет"))
             // list.add(Task("Оставить ревью"))
             // list.add(Task("Связаться с отделом по кадрам"))
-            list.add(Task("Подготовиться к собесу"))
+            list.add(Task(UUID.randomUUID(), "Подготовиться к собесу"))
         }
     }
 }
