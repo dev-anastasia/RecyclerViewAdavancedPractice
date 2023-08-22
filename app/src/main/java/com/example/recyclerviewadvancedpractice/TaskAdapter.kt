@@ -1,55 +1,15 @@
 package com.example.recyclerviewadvancedpractice
 
+import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.CheckBox
 import android.widget.TextView
-import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
-
-class ItemDiffUtilCallback(private val oldList: List<Any>, private val newList: List<Any>) :
-    DiffUtil.Callback() {
-
-    override fun getOldListSize(): Int = oldList.size
-
-    override fun getNewListSize(): Int = newList.size
-    override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-
-        val oldItem = oldList[oldItemPosition]
-        val newItem = newList[newItemPosition]
-
-        return if (oldItem is Task) {
-            if (newItem is Task)    // Task & Task
-                oldItem.id == newItem.id
-            else    // Task & Date
-                false
-        } else {
-            if (newItem is LocalDateTime)   // Date & Date
-                oldItem == newItem
-            else    // Date & Task
-                false
-        }
-    }
-
-    override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-
-        val oldItem = oldList[oldItemPosition]
-        val newItem = newList[newItemPosition]
-
-        return if (oldItem is Task) {   // Task & Task
-            val newTask = newItem as Task
-            oldItem.task == newTask.task
-        } else {   // Date & Date
-            val oldDate = oldItem as LocalDateTime
-            val newDate = newItem as LocalDateTime
-            oldDate.toString() == newDate.toString()
-        }
-    }
-
-}
 
 class TaskAdapter(var list: MutableList<Any>) : RecyclerView.Adapter<ViewHolder>() {
 
@@ -93,6 +53,21 @@ class TaskAdapter(var list: MutableList<Any>) : RecyclerView.Adapter<ViewHolder>
             }
         }
     }
+
+    override fun onBindViewHolder(holder: ViewHolder, position: Int, payloads: MutableList<Any>) {
+        if (payloads.isEmpty())
+            super.onBindViewHolder(holder, position, payloads)
+        else {
+            val bundle = payloads.first() as Bundle
+            for (key in bundle.keySet()) {
+                when (key) {
+                    (ItemDiffUtilCallback.DONE) -> {
+                        (holder as TaskViewHolder).updateCheckBox(bundle.getBoolean(key))
+                    }
+                }
+            }
+        }
+    }
 }
 
 enum class TaskViewType {
@@ -111,8 +86,14 @@ class DateViewHolder(view: View) : ViewHolder(view) {
 
 class TaskViewHolder(view: View) : ViewHolder(view) {
     private val taskTv: TextView = itemView.findViewById(R.id.tv_task)
+    private val checkBox: CheckBox = itemView.findViewById(R.id.check_box)
 
     fun bind(task: Task) {
         taskTv.text = task.task
+        checkBox.isChecked = task.checkBoxStatus
+    }
+
+    fun updateCheckBox(checkBoxStatus: Boolean) {
+        checkBox.isChecked = checkBoxStatus
     }
 }

@@ -1,6 +1,7 @@
 package com.example.recyclerviewadvancedpractice
 
 import android.os.Bundle
+import android.widget.CheckBox
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -29,11 +30,8 @@ class MainActivity : AppCompatActivity() {
         dateStateMap.initDateStateMap()
         println(dateStateMap)
 
-
         // Adapter
-        val recyclerView = findViewById<RecyclerView>(R.id.list)
-        val btnAdd: FloatingActionButton = findViewById(R.id.btn_add)
-
+        val recyclerView: RecyclerView = findViewById(R.id.list)
         adapter = TaskAdapter(list)
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(
@@ -42,23 +40,35 @@ class MainActivity : AppCompatActivity() {
             false
         )
 
+        // xml
+        val btnAdd: FloatingActionButton = findViewById(R.id.btn_add)
+        val btnSwap: FloatingActionButton = findViewById(R.id.btn_swap)
+
         btnAdd.setOnClickListener {
 
             val newList = ArrayList(list) // создаём новый список на основе старого
+            val task = Task(UUID.randomUUID(), "Почистить код", false)
 
-            val task = Task(UUID.randomUUID(), "Почистить код")
-            newList.add(task) // добавляем в новый список новый элемент
+            // добавляем задачу в мапу и список
+            dateStateMap.addElement(currentDate, task, newList)
 
-            val position = dateStateMap.findElementPosition(currentDate) // индекс новой задачи
-            dateStateMap.addElement(currentDate, task) // добавляем в мапу
-
-            val diff = DiffUtil.calculateDiff(ItemDiffUtilCallback(list, newList)) // сравнили два списка
-            adapter.list.add(position, task) // добавили новый элемент в список адаптера
+            val diff =
+                DiffUtil.calculateDiff(ItemDiffUtilCallback(list, newList)) // сравнили два списка
+            adapter.list = newList // обновили список адаптера
             list = newList // обновили старый список
+            diff.dispatchUpdatesTo(adapter) // применяем обновления (?)
+        }
 
+        btnSwap.setOnClickListener {
+
+            val newList = ArrayList(list) // создаём новый список на основе старого
+            dateStateMap.swap(currentDate, newList) // обновляем мапу
+
+            val diff =
+                DiffUtil.calculateDiff(ItemDiffUtilCallback(list, newList))
+            adapter.list = newList
+            list = newList
             diff.dispatchUpdatesTo(adapter)
-
-            recyclerView.smoothScrollToPosition(position)
         }
     }
 }

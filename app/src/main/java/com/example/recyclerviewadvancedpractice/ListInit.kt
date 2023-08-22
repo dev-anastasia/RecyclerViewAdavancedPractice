@@ -9,6 +9,6 @@ fun listInit(list: MutableList<Any>) {
         curr = curr.plusDays(1)
         list.add(curr)
         for (k in 0 until 4)
-            list.add(Task(UUID.randomUUID(), "Подготовиться к собесу"))
+            list.add(Task(UUID.randomUUID(), "Подготовиться к собесу", false))
     }
 }

@@ -1,10 +1,12 @@
 package com.example.recyclerviewadvancedpractice
 
 import java.time.LocalDateTime
+import java.util.*
 
 data class DateStateMap(private val list: List<Any>) {
 
     private var dateStateMap: MutableMap<LocalDateTime, MutableList<Task>> = mutableMapOf()
+    private var position = 0
 
     fun initDateStateMap() {
 
@@ -34,8 +36,33 @@ data class DateStateMap(private val list: List<Any>) {
             list.indexOf(date) + 1
     }
 
-    fun addElement(date: LocalDateTime, task: Task) {
+    fun addElement(date: LocalDateTime, task: Task, list: MutableList<Any>) {
         val tasksList = dateStateMap[date]
+        val lastTask = tasksList?.last()
         tasksList?.add(task)
+
+        val index = list.indexOf(lastTask as Task)
+        position = index + 1
+        list.add(position, task)
+    }
+
+    fun swap(date: LocalDateTime, list: MutableList<Any>) {
+        val tasksList = dateStateMap[date]
+        if (tasksList != null) {
+            if (tasksList.size > 1) {
+                val mapFirst = tasksList[0]
+                val mapLast = tasksList.last()
+
+                tasksList.remove(mapFirst)
+                tasksList.remove(mapLast)
+
+                tasksList.add(0, mapLast)
+                tasksList.add(mapFirst)
+
+                val indexFirst = list.indexOf(mapFirst)
+                val indexLast = list.indexOf(mapLast)
+                Collections.swap(list, indexFirst, indexLast)
+            }
+        }
     }
 }

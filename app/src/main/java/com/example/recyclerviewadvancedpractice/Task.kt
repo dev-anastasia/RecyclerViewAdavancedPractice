@@ -4,5 +4,6 @@ import java.util.*
 
 data class Task(
     val id: UUID,
-    val task: String
+    val task: String,
+    val checkBoxStatus: Boolean
 )
