@@ -62,5 +62,4 @@ class ItemDiffUtilCallback(private val oldList: List<Any>, private val newList: 
     companion object {
         const val DONE = "done"
     }
-
 }

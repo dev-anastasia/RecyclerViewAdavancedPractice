@@ -24,20 +24,24 @@ data class DateStateMap(private val list: List<Any>) {
         }
     }
 
-    fun findElementPosition(date: LocalDateTime): Int {
-
-        val listOfTasks = dateStateMap[date]    // Достаём список задач по дате
-        val element = listOfTasks?.last()   // Достаём последнюю задачу из списка
-
-        // Далее ищем эту задачу в общем списке
-        return if (element != null) {
-            list.indexOf(element) + 1   // +1 чтобы занять место ПОСЛЕ этого индекса
-        } else
-            list.indexOf(date) + 1
+    private fun getTasksList(date: LocalDateTime): MutableList<Task>? {
+        return dateStateMap[date]
     }
 
+//    fun findElementPosition(date: LocalDateTime): Int {
+//
+//        val tasksList = getTasksList(date)    // Достаём список задач по дате
+//        val element = tasksList?.last()   // Достаём последнюю задачу из списка
+//
+//        // Далее ищем эту задачу в общем списке
+//        return if (element != null) {
+//            list.indexOf(element) + 1   // +1 чтобы занять место ПОСЛЕ этого индекса
+//        } else
+//            list.indexOf(date) + 1
+//    }
+
     fun addElement(date: LocalDateTime, task: Task, list: MutableList<Any>) {
-        val tasksList = dateStateMap[date]
+        val tasksList = getTasksList(date)
         val lastTask = tasksList?.last()
         tasksList?.add(task)
 
@@ -47,7 +51,7 @@ data class DateStateMap(private val list: List<Any>) {
     }
 
     fun swap(date: LocalDateTime, list: MutableList<Any>) {
-        val tasksList = dateStateMap[date]
+        val tasksList = getTasksList(date)
         if (tasksList != null) {
             if (tasksList.size > 1) {
                 val mapFirst = tasksList[0]

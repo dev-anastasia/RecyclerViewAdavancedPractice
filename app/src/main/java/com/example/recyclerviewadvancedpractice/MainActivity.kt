@@ -1,7 +1,6 @@
 package com.example.recyclerviewadvancedpractice
 
 import android.os.Bundle
-import android.widget.CheckBox
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -10,7 +9,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import java.time.LocalDateTime
 import java.util.*
 
-// Branch devOne
+// Branch devTwo
 
 val currentDate: LocalDateTime = LocalDateTime.now()
 
@@ -61,7 +60,7 @@ class MainActivity : AppCompatActivity() {
 
         btnSwap.setOnClickListener {
 
-            val newList = ArrayList(list) // создаём новый список на основе старого
+            val newList = ArrayList(list)
             dateStateMap.swap(currentDate, newList) // обновляем мапу
 
             val diff =
